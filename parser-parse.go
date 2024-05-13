@@ -147,11 +147,30 @@ func (ps *Parser) getDate(metadata map[string]string, fieldName string) *time.Ti
 // getParsedDate tries to parse a date string using a list of known formats.
 // If the date string can't be parsed, it will return nil.
 func getParsedDate(dateStr string) *time.Time {
+	formats := []string{
+		time.RFC3339,
+		time.RFC3339Nano,
+		"2006-01-02T15:04:05+07:00",
+		"2006-01-02T15:04:05.999999999",
+		"2006-01-02T15:04:05",
+		"2006-01-02T15:04",
+		"2006-01-02 15:04:05",
+		"2006-01-02",
+		"20060102T1504-0700",
+		"20060102T1504",
+		"20060102",
+	}
+
+	for _, format := range formats {
+		if t, err := time.Parse(format, dateStr); err == nil {
+			return &t
+		}
+	}
 
 	d, err := dateparse.ParseAny(dateStr)
 	if err != nil {
-		fmt.Printf("Failed to parse date \"%s\"\n", dateStr)
 		return nil
 	}
+
 	return &d
 }
