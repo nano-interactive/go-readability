@@ -32,7 +32,7 @@ var (
 	rxHasContent           = regexp.MustCompile(`(?i)\S$`)
 	rxHashURL              = regexp.MustCompile(`(?i)^#.+`)
 	rxPropertyPattern      = regexp.MustCompile(`(?i)\s*(dc|dcterm|og|article|twitter)\s*:\s*(author|creator|description|title|site_name|published_time|modified_time|image\S*)\s*`)
-	rxNamePattern          = regexp.MustCompile(`(?i)^\s*(?:(dc|dcterm|article|og|twitter|weibo:(article|webpage))\s*[\.:]\s*)?(author|creator|description|title|site_name|published_time|modified_time|image)\s*$`)
+	rxNamePattern          = regexp.MustCompile(`(?i)^\s*(?:(dc|dcterm|article|og|twitter|weibo:(article|webpage))\s*[\.:]\s*)?(author|creator|description|title|site|site_name|published_time|modified_time|image)\s*$`)
 	rxTitleSeparator       = regexp.MustCompile(`(?i) [\|\-\\/>»] `)
 	rxTitleHierarchySep    = regexp.MustCompile(`(?i) [\\/>»] `)
 	rxTitleRemoveFinalPart = regexp.MustCompile(`(?i)(.*)[\|\-\\/>»] .*`)
@@ -72,6 +72,10 @@ var (
 	}
 )
 
+type SocialInfo struct {
+	Username string
+}
+
 // flags is flags that used by parser.
 type flags struct {
 	stripUnlikelys     bool
@@ -87,19 +91,20 @@ type parseAttempt struct {
 
 // Article is the final readable content.
 type Article struct {
-	Title         string
-	Byline        string
+	PublishedTime *time.Time
+	ModifiedTime  *time.Time
 	Node          *html.Node
-	Content       string
-	TextContent   string
-	Length        int
-	Excerpt       string
+	Social        map[string]SocialInfo
 	SiteName      string
+	Title         string
+	TextContent   string
 	Image         string
 	Favicon       string
 	Language      string
-	PublishedTime *time.Time
-	ModifiedTime  *time.Time
+	Content       string
+	Byline        string
+	Excerpt       string
+	Length        int
 }
 
 // Parser is the parser that parses the page to get the readable content.
@@ -1386,10 +1391,8 @@ func (ps *Parser) getJSONLD() (map[string]string, error) {
 
 		// DatePublished
 		if datePublished, isString := parsed["datePublished"].(string); isString {
-			fmt.Println(datePublished)
 			metadata["datePublished"] = datePublished
 		}
-
 	})
 
 	return metadata, nil
@@ -1410,7 +1413,7 @@ func (ps *Parser) getArticleMetadata(jsonLd map[string]string) map[string]string
 			return
 		}
 		matches := []string{}
-		name := ""
+		var name string
 
 		if elementProperty != "" {
 			matches = rxPropertyPattern.FindAllString(elementProperty, -1)
@@ -1505,6 +1508,18 @@ func (ps *Parser) getArticleMetadata(jsonLd map[string]string) map[string]string
 	metadataPublishedTime = shtml.UnescapeString(metadataPublishedTime)
 	metadataModifiedTime = shtml.UnescapeString(metadataModifiedTime)
 
+	metadataTwitter := ""
+	possibleAttrNames := []string{"twitter:site", "twitter:creator"}
+	for _, name := range possibleAttrNames {
+		if value, ok := values[name]; ok {
+			metadataTwitter = value
+			if metadataTwitter != "" && metadataTwitter[0] != '@' {
+				metadataTwitter = "@" + metadataTwitter
+			}
+			break
+		}
+	}
+
 	return map[string]string{
 		"title":         metadataTitle,
 		"byline":        metadataByline,
@@ -1514,6 +1529,7 @@ func (ps *Parser) getArticleMetadata(jsonLd map[string]string) map[string]string
 		"favicon":       metadataFavicon,
 		"publishedTime": metadataPublishedTime,
 		"modifiedTime":  metadataModifiedTime,
+		"twitter":       metadataTwitter,
 	}
 }
 
