@@ -3,8 +3,9 @@ module github.com/nano-interactive/go-readability
 go 1.22
 
 require (
+	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/go-shiori/dom v0.0.0-20230515143342-73569d674e1c
-	github.com/sergi/go-diff v1.3.1
+	github.com/sergi/go-diff v1.1.0
 	golang.org/x/net v0.25.0
 )
 
