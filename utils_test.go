@@ -7,6 +7,8 @@ import (
 )
 
 func Test_indexOf(t *testing.T) {
+	t.Parallel()
+
 	sample := strings.Fields("" +
 		"hello this is a simple sentence and we try " +
 		"to repeat some simple word like this")
@@ -30,6 +32,8 @@ func Test_indexOf(t *testing.T) {
 }
 
 func Test_wordCount(t *testing.T) {
+	t.Parallel()
+
 	scenarios := map[string]int{
 		"German fashion designer Karl Lagerfeld, best known for his creative work at Chanel, dies at the age of 85.":       19,
 		"A suicide bombing attack near Pulwama, in Indian administered Kashmir, kills 40 security personnel.":              14,
@@ -47,6 +51,8 @@ func Test_wordCount(t *testing.T) {
 }
 
 func Test_toAbsoluteURI(t *testing.T) {
+	t.Parallel()
+
 	baseURL, _ := nurl.ParseRequestURI("http://localhost:8080/absolute/")
 
 	scenarios := map[string]string{

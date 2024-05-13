@@ -22,7 +22,7 @@ This package is stable enough for use and up to date with Readability.js [v0.4.4
 To install this package, just run `go get` :
 
 ```
-go get -u -v github.com/go-shiori/go-readability
+go get -u -v github.com/nano-interactive/go-readability
 ```
 
 ## Example
@@ -38,45 +38,45 @@ import (
 	"os"
 	"time"
 
-	readability "github.com/go-shiori/go-readability"
+ readability "github.com/nano-interactive/go-readability"
 )
 
 var (
-	urls = []string{
-		// this one is article, so it's parse-able
-		"https://www.nytimes.com/2019/02/20/climate/climate-national-security-threat.html",
-		// while this one is not an article, so readability will fail to parse.
-		"https://www.nytimes.com/",
-	}
+ urls = []string{
+  // this one is article, so it's parse-able
+  "https://www.nytimes.com/2019/02/20/climate/climate-national-security-threat.html",
+  // while this one is not an article, so readability will fail to parse.
+  "https://www.nytimes.com/",
+ }
 )
 
 func main() {
-	for i, url := range urls {
-		article, err := readability.FromURL(url, 30*time.Second)
-		if err != nil {
-			log.Fatalf("failed to parse %s, %v\n", url, err)
-		}
+ for i, url := range urls {
+  article, err := readability.FromURL(url, 30*time.Second)
+  if err != nil {
+   log.Fatalf("failed to parse %s, %v\n", url, err)
+  }
 
-		dstTxtFile, _ := os.Create(fmt.Sprintf("text-%02d.txt", i+1))
-		defer dstTxtFile.Close()
-		dstTxtFile.WriteString(article.TextContent)
+  dstTxtFile, _ := os.Create(fmt.Sprintf("text-%02d.txt", i+1))
+  defer dstTxtFile.Close()
+  dstTxtFile.WriteString(article.TextContent)
 
-		dstHTMLFile, _ := os.Create(fmt.Sprintf("html-%02d.html", i+1))
-		defer dstHTMLFile.Close()
-		dstHTMLFile.WriteString(article.Content)
+  dstHTMLFile, _ := os.Create(fmt.Sprintf("html-%02d.html", i+1))
+  defer dstHTMLFile.Close()
+  dstHTMLFile.WriteString(article.Content)
 
-		fmt.Printf("URL     : %s\n", url)
-		fmt.Printf("Title   : %s\n", article.Title)
-		fmt.Printf("Author  : %s\n", article.Byline)
-		fmt.Printf("Length  : %d\n", article.Length)
-		fmt.Printf("Excerpt : %s\n", article.Excerpt)
-		fmt.Printf("SiteName: %s\n", article.SiteName)
-		fmt.Printf("Image   : %s\n", article.Image)
-		fmt.Printf("Favicon : %s\n", article.Favicon)
-		fmt.Printf("Text content saved to \"text-%02d.txt\"\n", i+1)
-		fmt.Printf("HTML content saved to \"html-%02d.html\"\n", i+1)
-		fmt.Println()
-	}
+  fmt.Printf("URL     : %s\n", url)
+  fmt.Printf("Title   : %s\n", article.Title)
+  fmt.Printf("Author  : %s\n", article.Byline)
+  fmt.Printf("Length  : %d\n", article.Length)
+  fmt.Printf("Excerpt : %s\n", article.Excerpt)
+  fmt.Printf("SiteName: %s\n", article.SiteName)
+  fmt.Printf("Image   : %s\n", article.Image)
+  fmt.Printf("Favicon : %s\n", article.Favicon)
+  fmt.Printf("Text content saved to \"text-%02d.txt\"\n", i+1)
+  fmt.Printf("HTML content saved to \"html-%02d.html\"\n", i+1)
+  fmt.Println()
+ }
 }
 ```
 
@@ -86,12 +86,12 @@ However, sometimes you want to parse an URL no matter if it's an article or not.
 package main
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-	"net/url"
+ "fmt"
+ "log"
+ "net/http"
+ "net/url"
 
-	readability "github.com/go-shiori/go-readability"
+ readability "github.com/nano-interactive/go-readability"
 )
 
 var (
@@ -135,35 +135,11 @@ func main() {
 
 ```
 
-## Command Line Usage
-
-You can also use `go-readability` as command line app. To do that, first install the CLI :
-
-```
-go get -u -v github.com/go-shiori/go-readability/cmd/...
-```
-
-Now you can use it by running `go-readability` in your terminal :
-
-```
-$ go-readability -h
-
-go-readability is parser to fetch the readable content of a web page.
-The source can be an url or existing file in your storage.
-
-Usage:
-  go-readability [flags] source
-
-Flags:
-  -h, --help       help for go-readability
-  -m, --metadata   only print the page's metadata
-```
-
 ## Licenses
 
 Go-Readability is distributed under [MIT license][mit], which means you can use and modify it however you want. However, if you make an enhancement for it, if possible, please send a pull request. If you like this project, please consider donating to me either via [PayPal][paypal] or [Ko-Fi][kofi].
 
-[go-ref]: https://pkg.go.dev/github.com/go-shiori/go-readability
+[go-ref]: https://pkg.go.dev/github.com/nano-interactive/go-readability
 [go-ref-badge]: https://img.shields.io/static/v1?label=&message=Reference&color=007d9c&logo=go&logoColor=white
 [paypal]: https://www.paypal.me/RadhiFadlillah
 [paypal-badge]: https://img.shields.io/static/v1?label=&message=PayPal&color=00457C&logo=paypal&logoColor=white

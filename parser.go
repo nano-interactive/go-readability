@@ -64,7 +64,8 @@ var (
 		"datalist", "dfn", "em", "embed", "i", "img", "input", "kbd", "label",
 		"mark", "math", "meter", "noscript", "object", "output", "progress", "q",
 		"ruby", "samp", "script", "select", "small", "span", "strong", "sub",
-		"sup", "textarea", "time", "var", "wbr"}
+		"sup", "textarea", "time", "var", "wbr",
+	}
 )
 
 // flags is flags that used by parser.
@@ -787,7 +788,7 @@ func (ps *Parser) grabArticle() *html.Node {
 		// tags where they have been used inappropriately (as in, where
 		// they contain no other block level elements.)
 		var elementsToScore []*html.Node
-		var node = dom.DocumentElement(doc)
+		node := dom.DocumentElement(doc)
 		shouldRemoveTitleHeader := true
 
 		for node != nil {

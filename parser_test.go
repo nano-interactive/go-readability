@@ -3,7 +3,6 @@ package readability
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"os"
 	fp "path/filepath"
@@ -16,9 +15,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-var (
-	fakeHostURL, _ = url.ParseRequestURI("http://fakehost/test/page.html")
-)
+var fakeHostURL, _ = url.ParseRequestURI("http://fakehost/test/page.html")
 
 type ExpectedMetadata struct {
 	Title         string `json:"title,omitempty"`
@@ -26,14 +23,17 @@ type ExpectedMetadata struct {
 	Excerpt       string `json:"excerpt,omitempty"`
 	Language      string `json:"language,omitempty"`
 	SiteName      string `json:"siteName,omitempty"`
-	Readerable    bool   `json:"readerable"`
 	PublishedTime string `json:"publishedTime,omitempty"`
 	ModifiedTime  string `json:"modifiedTime,omitempty"`
+	Readerable    bool   `json:"readerable"`
 }
 
 func Test_parser(t *testing.T) {
+	t.Parallel()
+
 	testDir := "test-pages"
-	testItems, err := ioutil.ReadDir(testDir)
+
+	testItems, err := os.ReadDir(testDir)
 	if err != nil {
 		t.Errorf("\nfailed to read test directory")
 	}
